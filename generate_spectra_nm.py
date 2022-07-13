@@ -4,14 +4,8 @@ from radis import calc_spectrum
 # function presents error and usage to user, then quits
 def __error(error_text):
   print(error_text)
-  print("  usage: python3 generate_spectra.py <source (t or g)> <min-wavenumber (cm^-1)>  <max-wavenumber (cm^-1)>")
+  print("  usage: python3 generate_spectra_nm.py <source (t or g)> <min-wavelength (nm)>  <max-wavelength (nm)>")
   quit()
-
-# convert wavenumber (cm^-1) to wavelength (nm) (10000000 / wavenumber)
-def __convert_wavenum_wavelen(min_wavenum, max_wavenum):
-  min_wavelen = math.floor(10000000 / max_wavenum)
-  max_wavelen = math.ceil(10000000 / min_wavenum)
-  return min_wavelen, max_wavelen
 
 # check number of args
 if len(sys.argv) < 4:
@@ -19,8 +13,8 @@ if len(sys.argv) < 4:
 
 # create variables from args
 source = sys.argv[1]
-min_wavenum = int(sys.argv[2])
-max_wavenum = int(sys.argv[3])
+min_wavelen = int(sys.argv[2])
+max_wavelen = int(sys.argv[3])
 
 # check if source is correct (t or g)
 if (source != 't') and (source != 'g'):
@@ -33,19 +27,6 @@ elif source == 't':
   source_temp = 3100
 else:
   __error("  source needs to be <t> or <g>. provided source: %s"%(source))
-
-# check if wavenumbers are correct
-if min_wavenum < 400:
-  __error("  min wavenumber is out of range (400 - 12500). provided min: %s"%(min_wavenum))
-elif min_wavenum > 12500:
-  __error("  max wavenumber is out of range (400 - 12500). provided max: %s"%(max_wavenum))
-elif min_wavenum > max_wavenum:
-  __error("  min wavenumber is greater than max wavenumber. provided min: %s  provided max: %s"%(min_wavenum, max_wavenum))
-elif min_wavenum == max_wavenum:
-  __error("  min wavenumber is equivalent to max wavenumber. provided min: %s  provided max: %s"%(min_wavenum, max_wavenum))
-
-# convert wavenumbers to wavelengths (cm^-1 --> nm)
-min_wavelen, max_wavelen = __convert_wavenum_wavelen(min_wavenum, max_wavenum)
 
 # check if wavelengths are correct
 if min_wavelen < 800:
